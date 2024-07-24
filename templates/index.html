@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Index | SAT-Prep</title>
+    <meta name="twitter:title" property="og:title" itemprop="name" content="Index | SAT-Prep"/>
+    <meta name="twitter:description" property="og:description" itemprop="description"
+          content="Index - SAT-Prep"/>
+{% endblock %}
+{% block content %}
+    {% load static %}
+    {% include "nav.html" %}
+
+    <!-- Hero Section -->
+     
+    <section class="bg-center grid grid-cols-[65%_35%] gap-4">
+        <div class="container py-24 mx-auto text-center">
+            <h1 class="text-4xl font-bold mb-4">Join Our SAT Coaching Program</h1>
+            <p class="text-xl mb-6">Achieve your dream score with our expert guidance and comprehensive study materials.</p>
+            <a href="#register-now" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Register Now</a>
+        </div>
+        <div  class="bg-cover bg-center ml-5" style="background-image: url('{% static 'images/students.png' %}');"></div>
+    </section>
+    <!-- Registration Section -->
+    <section id="register-now" class="container mx-auto mt-12 px-4">
+        <div class="flex flex-wrap -mx-4">
+            <div class="w-full md:w-1/2 px-4">
+                <img src="{% static 'images/register-now.png' %}" alt="SAT Coaching" class="rounded">
+            </div>
+            <div class="w-full md:w-1/2 px-4 mb-8 md:mb-0">
+                <h2 class="text-2xl font-bold mb-4">Register Now</h2>
+                <form action="{% url 'appointments' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="username" class="block text-gray-700">username</label>
+                        <input type="text" id="username" name="username" class="w-full px-3 py-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700">Email</label>
+                        <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="phone" class="block text-gray-700">Phone</label>
+                        <input type="text" id="phone" name="phone" class="w-full px-3 py-2 border rounded" required>
+                    </div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Register</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

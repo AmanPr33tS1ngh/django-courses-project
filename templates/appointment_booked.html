@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Index | SAT-Prep</title>
+    <meta name="twitter:title" property="og:title" itemprop="name" content="Index | SAT-Prep"/>
+    <meta name="twitter:description" property="og:description" itemprop="description"
+          content="Index - SAT-Prep"/>
+{% endblock %}
+{% block content %}
+    {% load static %}
+    {% include "nav.html" %}
+     <!-- Header Section -->
+    
+    <header class="bg-white text-blue-600 py-4">
+        <div class="flex justify-center items-center">
+            <a class="text-2xl font-bold" href="#">Appointment Booked</a>
+        </div>
+    </header>
+    <section class="container mx-auto my-12 px-4 text-center">
+        <h1 class="text-4xl font-bold mb-4">Thank You for Booking an Appointment!</h1>
+        <p class="text-xl mb-6">We have received your request. Our team will get in touch with you soon.</p>
+        <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Home</a>
+    </section>
+
+{% endblock %}

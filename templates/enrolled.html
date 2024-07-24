@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Enroll | SAT-Prep</title>
+    <meta name="twitter:title" property="og:title" itemprop="name" content="Enroll | SAT-Prep"/>
+    <meta name="twitter:description" property="og:description" itemprop="description"
+          content="Enroll - SAT-Prep"/>
+{% endblock %}
+{% block content %}
+    {% load static %}
+    {% include "nav.html" %}    
+   
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h1 class="text-2xl font-bold mb-4">Enrollment Successful!</h1>
+        <p class="mb-4">Thank you for enrolling in our course. We will contact you soon with further details.</p>
+        <a href="{% url 'courses' %}" class="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600">Back to Courses</a>
+    </div>
+
+{% endblock %}

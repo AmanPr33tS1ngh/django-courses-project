@@ -17,9 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from core.views import About, ContactUs, Index
+
 urlpatterns = [
+    path('', Index.as_view(), name='index'),
+    path("about", About.as_view(), name="about"),
+    path("contact", ContactUs.as_view(), name="contact"),
     path('admin/', admin.site.urls),
-    path('api/', include('course.urls')),
+    path('course/', include('course.urls')),
     path("user/", include('user.urls')),
     path("appointment/", include('appointment.urls')),
 ]

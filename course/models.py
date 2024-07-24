@@ -55,6 +55,13 @@ class CourseSchedule(models.Model):
         
         return output
 
+class Feature(models.Model):
+    detail = models.TextField(max_length=100)
+
+    def __str__(self):
+        return self.detail
+
+    
 class Course(models.Model):
     name = models.TextField(max_length=100)
     batch = models.IntegerField()
@@ -63,7 +70,18 @@ class Course(models.Model):
     start_date = models.DateTimeField(null=True, default=None)
     schedule = models.ForeignKey(CourseSchedule, on_delete=models.CASCADE, related_name="schedule", null=True, default=None)
     time = models.ForeignKey(CourseTime, on_delete=models.CASCADE, related_name="time", null=True, default=None)
-    
+    features = models.ManyToManyField(Feature, related_name='features')
+
     def __str__(self):
         return f"{self.name} - Batch {self.batch}"
+
+class Enrollment(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="enrollments")
+    username = models.TextField(max_length=100)
+    email = models.TextField(max_length=100)
+    phone_number = models.TextField(max_length=15)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.username} - {self.email} - {self.phone_number}"
     

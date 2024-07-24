@@ -1,8 +1,12 @@
+from django.views import View
 from rest_framework.views import APIView
-from .models import Course, Course, CourseSchedule, CourseTime
+from .models import Course, Course, CourseSchedule, CourseTime, Enrollment
 from django.http import JsonResponse
 from .serializers import CourseSerializer
 from datetime import datetime
+from django.shortcuts import render
+from django.db.models import Q
+
 # Create your views here.
 
 """ COURSES API """
@@ -11,8 +15,8 @@ class CoursesAPI(APIView):
     def get(self, request, *args, **kwargs):
         courses = Course.objects.all()
         courses_serialized = CourseSerializer(courses, many=True).data
-        return JsonResponse(data={"courses": courses_serialized})
-    
+        return render(request, 'courses.html', {"courses": courses_serialized})
+        
     def post(self, request, *args, **kwargs):
         data = request.data
         name = data.get('name', None)
@@ -64,11 +68,12 @@ class CourseAPI(APIView):
             course_id = kwargs.get('id')
             course = Course.objects.get(id=course_id)
             course_serialized = CourseSerializer(course).data
-            return JsonResponse(course_serialized)
+            print("kksss", course_serialized)
+            return render(request, 'course.html', {"course": course_serialized})
         except Course.DoesNotExist:
-            return JsonResponse(data={"message": "Course not found"})
+            return render(request, 'course.html', {"error": "Course not found"})
         except Exception as e:
-            return JsonResponse(data={"message": f"Unexpected exception {e}"})
+            return render(request, 'course.html', {"error": f"Unexpected exception {e}"})
     
     def put(self, request, *args, **kwargs):
         try:
@@ -131,4 +136,32 @@ class CourseAPI(APIView):
         except Exception as e:
             return JsonResponse(data={"message": f"Unexpected exception {e}"})
         
+class EnrollCourseAPI(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            name = request.POST.get("name", None)
+            email = request.POST.get("email", None)
+            phone_number = request.POST.get("phone", None)
+            course_id = request.POST.get('course_id')
+
+            if not name or not email or not phone_number or not course_id:
+                return JsonResponse(data={"error": "All fields are required"})
+            
+            existing_enrollment = Enrollment.objects.filter(Q(email=email, course__id=course_id) | Q(phone_number=phone_number, course__id=course_id))
+            if existing_enrollment:
+                return JsonResponse(data={"error": "Enrollment already exists for this course"})
+            
+            course = Course.objects.get(id=course_id)
+            Enrollment.objects.create(
+                course=course,
+                username=name,
+                email=email,
+                phone_number=phone_number,
+            )
+
+            return render(request, 'enrolled.html')
         
+        except Course.DoesNotExist:
+            return JsonResponse(data={"error": "Course not found"})
+        except Exception as e:
+            return JsonResponse(data={"error": f"Unexpected error: {e}"})
