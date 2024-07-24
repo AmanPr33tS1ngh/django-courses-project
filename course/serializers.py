@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from .models import Course
 
-class CourseSerializer(serializers.Serializer):
-    batch = serializers.SerializerMethodField()
+class CourseSerializer(serializers.ModelSerializer):
     schedule = serializers.SerializerMethodField()
     timings = serializers.SerializerMethodField()
     
@@ -16,7 +15,7 @@ class CourseSerializer(serializers.Serializer):
         if not course_timing:
             return "Per Availability"
         
-        return f"{course_timing.time_start.strftime("%H")} - {course_timing.time_end.strftime("%H")}"
+        return f"{course_timing.start_time.strftime("%I %p")} - {course_timing.end_time.strftime("%I %p")}"
         
     class Meta:
         model = Course

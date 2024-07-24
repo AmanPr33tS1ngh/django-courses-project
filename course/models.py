@@ -24,9 +24,9 @@ class CourseTime(models.Model):
             return None
         
         if self.start_time:
-            output += f"Start Time: {self.start_time}"
+            output += f"Start Time: {self.start_time} "
         if self.end_time:
-            output += f" End Time: {self.end_time}"
+            output += f"| End Time: {self.end_time}"
         
         return output
     
@@ -49,9 +49,9 @@ class CourseSchedule(models.Model):
             return None
         
         if self.start:
-            output += f"Start: {self.start}"
+            output += f"Start: {self.start} "
         if self.end:
-            output += f" End: {self.end}"
+            output += f"| End: {self.end}"
         
         return output
 

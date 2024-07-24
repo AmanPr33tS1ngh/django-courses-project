@@ -3,7 +3,7 @@ from course.serializers import CourseSerializer
 from rest_framework import serializers
 from user.serializers import UserSerializer
 
-class AppointmentSerializer(serializers.Serializer):
+class AppointmentSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     course = serializers.SerializerMethodField()
     appointment_timestamp = serializers.DateTimeField()

@@ -60,37 +60,75 @@ class CoursesAPI(APIView):
     
 class CourseAPI(APIView):
     def get(self, request, *args, **kwargs):
-        course_id = kwargs.get('id')
-        course = Course.objects.get(id=course_id)
-        course_serialized = CourseSerializer(course).data
-        return JsonResponse(course_serialized)
+        try:
+            course_id = kwargs.get('id')
+            course = Course.objects.get(id=course_id)
+            course_serialized = CourseSerializer(course).data
+            return JsonResponse(course_serialized)
+        except Course.DoesNotExist:
+            return JsonResponse(data={"message": "Course not found"})
+        except Exception as e:
+            return JsonResponse(data={"message": f"Unexpected exception {e}"})
     
     def put(self, request, *args, **kwargs):
-        course_id = kwargs.get('id')
-        course = Course.objects.get(id=course_id)
-        if not course:
-            return JsonResponse(data={"message": "Course not found"})
-        
-        data = request.data
-        batch, schedule_start, schedule_end = data.get('batch'), data.get('schedule_start'), data.get('schedule_start')
-
-        if batch:
-            course.batch = data.get('batch')
-        if schedule_start:
-            course.schedule_start = data.get('schedule_start')
-        if schedule_end:
-            course.schedule_end = data.get('schedule_end')
+        try:
+            course_id = kwargs.get('id')
+            course = Course.objects.get(id=course_id)
+            if not course:
+                return JsonResponse(data={"message": "Course not found"})
             
-        course.save()
-        course_serialized = CourseSerializer(course).data
-        return JsonResponse(course_serialized)
-    
-    def delete(self, request, *args, **kwargs):
-        course_id = kwargs.get('id')
-        course = Course.objects.get(id=course_id)
-        if not course:
-            return JsonResponse(data={"message": "Course not found"})
+            data = request.data
+            name, batch, start_date, schedule, time, is_started = data.get('name'), data.get('batch'),
+            data.get('start_date'), data.get('schedule'), data.get('time'), data.get('is_started')
+
+            if batch:
+                course.batch = batch
+            if name:
+                course.name = name
+            if start_date:
+                course.start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
+            if schedule:
+                schedule_start = schedule.get("start")
+                if schedule_start:
+                    course.schedule.start = schedule_start
+                schedule_end = schedule.get("end")
+                if schedule_end:
+                    course.schedule.end = schedule_end
+                course.schedule.save()
+            if time:
+                time_start = time.get("start_time")
+                if time_start:
+                    course.time.start_time = datetime.strptime(time_start, "%H:%M:%S")
+                time_end = time.get("end_time")
+                if time_end:
+                    course.time.end_time = datetime.strptime(time_end, "%H:%M:%S")
+                course.time.save()
+            if is_started:
+                course.is_started = is_started
+
+            course.save()
+            course_serialized = CourseSerializer(course).data
+            return JsonResponse(course_serialized)
         
-        course.delete()
-        return JsonResponse(data={"message": "Course deleted successfully"})
-    
+        except Course.DoesNotExist:
+            return JsonResponse(data={"message": "Course not found"})
+        except Exception as e:
+            return JsonResponse(data={"message": f"Unexpected exception {e}"})
+        
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            course_id = kwargs.get('id')
+            course = Course.objects.get(id=course_id)
+            if not course:
+                return JsonResponse(data={"message": "Course not found"})
+            
+            course.delete()
+            return JsonResponse(data={"message": "Course deleted successfully"})
+
+        except Course.DoesNotExist:
+            return JsonResponse(data={"message": "Course not found"})
+        except Exception as e:
+            return JsonResponse(data={"message": f"Unexpected exception {e}"})
+        
+        
