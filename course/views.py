@@ -15,7 +15,8 @@ class CoursesAPI(APIView):
     def get(self, request, *args, **kwargs):
         courses = Course.objects.all()
         courses_serialized = CourseSerializer(courses, many=True).data
-        return render(request, 'courses.html', {"courses": courses_serialized})
+        return JsonResponse(data={'courses': courses_serialized})
+        # return render(request, 'courses.html', {"courses": courses_serialized})
         
     def post(self, request, *args, **kwargs):
         data = request.data
@@ -69,11 +70,14 @@ class CourseAPI(APIView):
             course = Course.objects.get(id=course_id)
             course_serialized = CourseSerializer(course).data
             print("kksss", course_serialized)
-            return render(request, 'course.html', {"course": course_serialized})
+            return JsonResponse(status=200, data={'course': course_serialized})
+            # return render(request, 'course.html', {"course": course_serialized})
         except Course.DoesNotExist:
-            return render(request, 'course.html', {"error": "Course not found"})
+            return JsonResponse(status=404)
+            # return render(request, 'course.html', {"error": "Course not found"})
         except Exception as e:
-            return render(request, 'course.html', {"error": f"Unexpected exception {e}"})
+            return JsonResponse(status=400)
+            # return render(request, 'course.html', {"error": f"Unexpected exception {e}"})
     
     def put(self, request, *args, **kwargs):
         try:
@@ -158,8 +162,8 @@ class EnrollCourseAPI(APIView):
                 email=email,
                 phone_number=phone_number,
             )
-
-            return render(request, 'enrolled.html')
+            return JsonResponse(status=200)
+            # return render(request, 'enrolled.html')
         
         except Course.DoesNotExist:
             return JsonResponse(data={"error": "Course not found"})

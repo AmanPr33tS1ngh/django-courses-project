@@ -27,15 +27,15 @@ class AppointmentsAPI(APIView):
         if not phone_number:
             return JsonResponse(data={"message": "Phone number is required"})
         
-        Appointment.objects.create(
+        appointment = Appointment.objects.create(
             username=username,
             email=email,
             phone_number=phone_number,
         )
-        return redirect('appointment_booked')
+        # return redirect('appointment_booked')
     
-        # serialized_appointment = AppointmentSerializer(appointment).data
-        # return JsonResponse(data=serialized_appointment)
+        serialized_appointment = AppointmentSerializer(appointment).data
+        return JsonResponse(data=serialized_appointment)
     
         
 class AppointmentAPI(APIView):
@@ -56,6 +56,5 @@ class AppointmentAPI(APIView):
         
 class AppointmentBooked(View):
     def get(self, request, *args, **kwargs):
-        print("renderr")
         return render(request, 'appointment_booked.html')
     

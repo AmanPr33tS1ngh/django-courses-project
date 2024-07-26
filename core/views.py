@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 
@@ -30,4 +31,5 @@ class ContactUs(View):
             subject=subject,
             message=message,
         )
+        return JsonResponse(status=200)
         return render(request, 'contact_us.html', {'success': 'Message sent successfully'})
