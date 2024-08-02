@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Course, Feature
+from .models import Course, CourseTime, Feature
 
 class CourseSerializer(serializers.ModelSerializer):
     schedule = serializers.SerializerMethodField()
@@ -29,11 +29,19 @@ class CourseSerializer(serializers.ModelSerializer):
     def get_features(self, obj):
         return FeatureSerializer(obj.features.all(), many=True).data
     
+    def get_timings(self, obj):
+        return TimingSerializer(obj.time).data
+    
     class Meta:
         model = Course
-        fields = ("id", "name", "is_started", "start_date", "batch", "schedule", 'timings', 'features')
+        fields = ("id", "name", "detail", 'slug', "timings", "is_started", "start_date", "batch", "schedule", 'timings', 'features')
 
 class FeatureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feature
+        fields = '__all__'
+
+class TimingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseTime
         fields = '__all__'

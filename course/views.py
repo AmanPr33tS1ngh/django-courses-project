@@ -6,6 +6,7 @@ from .serializers import CourseSerializer
 from datetime import datetime
 from django.shortcuts import render
 from django.db.models import Q
+from django.template.defaultfilters import slugify
 
 # Create your views here.
 
@@ -13,6 +14,7 @@ from django.db.models import Q
 
 class CoursesAPI(APIView):
     def get(self, request, *args, **kwargs):
+        print("courrrsseee")
         courses = Course.objects.all()
         courses_serialized = CourseSerializer(courses, many=True).data
         return JsonResponse(data={'courses': courses_serialized})
@@ -20,11 +22,12 @@ class CoursesAPI(APIView):
         
     def post(self, request, *args, **kwargs):
         data = request.data
-        name = data.get('name', None)
-        batch = data.get('batch', None)
-        start_date = data.get('start_date', None)
-        schedule = data.get('schedule', None)
-        time = data.get('time', None)
+        name = data.get('name')
+        batch = data.get('batch')
+        start_date = data.get('start_date')
+        schedule = data.get('schedule')
+        time = data.get('time')
+        detail = data.get('detail')
 
         if not name:
             return JsonResponse(data={"message": "Name is required"})
@@ -57,26 +60,29 @@ class CoursesAPI(APIView):
         Course.objects.create(
             name=name,
             batch=batch,
+            detail=detail,
             start_date=start_date,
             schedule=course_schedule,
             time=course_time,
+            slug=slugify(name),
         )
         return JsonResponse(data={"message": "Course created successfully"})
     
 class CourseAPI(APIView):
     def get(self, request, *args, **kwargs):
         try:
-            course_id = kwargs.get('id')
-            course = Course.objects.get(id=course_id)
+            slug = kwargs.get('slug')
+            print("checkkk", slug)
+            course = Course.objects.get(slug=slug)
             course_serialized = CourseSerializer(course).data
             print("kksss", course_serialized)
             return JsonResponse(status=200, data={'course': course_serialized})
             # return render(request, 'course.html', {"course": course_serialized})
         except Course.DoesNotExist:
-            return JsonResponse(status=404)
+            return JsonResponse(status=404, data={'error': 'Course not found'})
             # return render(request, 'course.html', {"error": "Course not found"})
         except Exception as e:
-            return JsonResponse(status=400)
+            return JsonResponse(status=400, data={'error': f'Unexpected exception {e}'})
             # return render(request, 'course.html', {"error": f"Unexpected exception {e}"})
     
     def put(self, request, *args, **kwargs):

@@ -1,7 +1,7 @@
-from .views import CreateUserView
+from .views import UserAPI
 from django.urls import path
 
 
 urlpatterns = [
-    path("register/", CreateUserView.as_view(), name="register"),
+    path("", UserAPI.as_view(), name="user_api"),
 ]

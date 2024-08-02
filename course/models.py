@@ -65,12 +65,14 @@ class Feature(models.Model):
 class Course(models.Model):
     name = models.TextField(max_length=100)
     batch = models.IntegerField()
+    detail = models.TextField(max_length=200)
 
     is_started = models.BooleanField(default=False)
     start_date = models.DateTimeField(null=True, default=None)
     schedule = models.ForeignKey(CourseSchedule, on_delete=models.CASCADE, related_name="schedule", null=True, default=None)
     time = models.ForeignKey(CourseTime, on_delete=models.CASCADE, related_name="time", null=True, default=None)
     features = models.ManyToManyField(Feature, related_name='features')
+    slug = models.SlugField(max_length=200)
 
     def __str__(self):
         return f"{self.name} - Batch {self.batch}"

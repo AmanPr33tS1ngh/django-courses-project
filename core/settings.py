@@ -27,8 +27,9 @@ SECRET_KEY = 'django-insecure-ag+keplkxn0mxk^3-!6_qkf4ucmujntx4*7=wlpxy-=@vupi=w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -39,14 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third-party apps
+    "rest_framework",
+    'rest_framework_simplejwt',
+    "corsheaders",
     # Own apps
     "course",
     "user",
     "appointment",
-    # Third-party apps
-    "rest_framework",
-    'rest_framework_simplejwt.token_blacklist',
-    "corsheaders",
 ]
 
 
@@ -59,6 +60,9 @@ REST_FRAMEWORK = {
     ),
 }
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # cors
     "corsheaders.middleware.CorsMiddleware",
 ]
 
@@ -189,6 +194,3 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWS_CREDENTIALS = True
