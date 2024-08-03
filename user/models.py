@@ -6,6 +6,7 @@ class Student(models.Model):
     country = models.CharField(max_length=20, )
     grad = models.CharField(max_length=20,)
     intake = models.IntegerField()
+    phone_number = models.IntegerField()
 
     def __str__(self) -> str:
         return self.user

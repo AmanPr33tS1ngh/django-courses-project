@@ -62,8 +62,11 @@ class SignUp(APIView):
             verify_pass = request.data.get('verifyPassword', '').strip()
             country = request.data.get('country', '').strip()
             intake = request.data.get('intake', '').strip()
-            
-            if not username or not first_name or not last_name or not password or not email:
+            grad_type = request.data.get('grad_type', '').strip()
+            phone_number = request.data.get('phone_number', '').strip()
+
+            if not username or not first_name or not last_name or not password or not email or not verify_pass\
+                or not country or not intake or not grad_type or not phone_number:
                 return JsonResponse({'success': False, 'msg': "Please enter all details."})
 
             if password != verify_pass:
@@ -83,7 +86,9 @@ class SignUp(APIView):
             Student.objects.create(
                 user=user,
                 country=country,
+                grad=grad_type,
                 intake=intake,
+                phone_number=phone_number,
             )
 
             authenticated_user = authenticate(request, username=username, password=password)
