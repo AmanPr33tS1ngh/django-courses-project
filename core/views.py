@@ -27,13 +27,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         password = attrs.get('password')
         request = self.context.get('request')
 
-        print("checkkk", username, password, request)
         if request:
             user = authenticate(request=request, username=username, password=password)
             if user:
                 login(request, user)
-        else:
-            print("Request object is None.")
 
         data = super().validate(attrs)
         return data
@@ -104,7 +101,6 @@ class SignUp(APIView):
                                     "token": {'access_token': access_token, 'refresh_token': str(refresh)}})
 
         except Exception as e:
-            print('err while creating user', str(e))
             return JsonResponse({'success': False, 'msg': "err: " + str(e)})
 
 
@@ -114,7 +110,6 @@ class SignIn(APIView):
     def post(self, request, *args, **kwargs):
         try:
             user = request.user
-            print('kkkk', user.is_authenticated)
             if user.is_authenticated:
                 return JsonResponse({'success': False, 'msg': "You are already authenticated. Refresh the page"})
             username = request.data.get('username')
@@ -122,14 +117,12 @@ class SignIn(APIView):
             if not User.objects.filter(username=username).exists():
                 return JsonResponse({'success': False, 'msg': "Username is not registered. Please Sign up first."})
             user = authenticate(request, username=username, password=password)
-            print("userrr", user)
             if user:
                 login(request, user)
                 return JsonResponse({'success': True, 'msg': "Sign up successful!"})
-            print(request.user)
+
             return JsonResponse({'success': True, 'msg': "Couldn't signin due to an error. Please try again later"})
         except Exception as e:
-            print('err while creating user', str(e))
             return JsonResponse({'success': False, 'msg': "err: " + str(e)})
 
 
@@ -139,7 +132,6 @@ class LogOut(APIView):
             logout(request)
             return JsonResponse({'success': True, 'msg': "Logged out!"})
         except Exception as e:
-            print('err while creating user', str(e))
             return JsonResponse({'success': False, 'msg': "err: " + str(e)})
 
 

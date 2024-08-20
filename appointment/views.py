@@ -22,7 +22,6 @@ class AppointmentsAPI(APIView):
     def post(self, request, *args, **kwargs):   
         try:
             user = request.user
-            print("checkkkk", user)
             if user.is_anonymous:
                 return JsonResponse(status=401, data=dict())
 
@@ -64,7 +63,6 @@ class AppointmentsAPI(APIView):
             )
             return JsonResponse({'success': True})
         except Exception as e:
-            print("errr", str(e))
             return JsonResponse({"message": f"Unexpected error occurred: {e}"})
         
 class AppointmentAPI(APIView):

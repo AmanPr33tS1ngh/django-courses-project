@@ -14,7 +14,6 @@ from django.template.defaultfilters import slugify
 
 class CoursesAPI(APIView):
     def get(self, request, *args, **kwargs):
-        print("courrrsseee")
         courses = Course.objects.all()
         courses_serialized = CourseSerializer(courses, many=True).data
         return JsonResponse(data={'courses': courses_serialized})
@@ -72,10 +71,8 @@ class CourseAPI(APIView):
     def get(self, request, *args, **kwargs):
         try:
             slug = kwargs.get('slug')
-            print("checkkk", slug)
             course = Course.objects.get(slug=slug)
             course_serialized = CourseSerializer(course).data
-            print("kksss", course_serialized)
             return JsonResponse(status=200, data={'course': course_serialized})
             # return render(request, 'course.html', {"course": course_serialized})
         except Course.DoesNotExist:
